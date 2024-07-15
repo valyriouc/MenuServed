@@ -21,15 +21,23 @@ public class AuthController : ControllerBase
     [AllowAnonymous]
     public IActionResult Login([FromBody] LoginData data)
     {
-       
+        
         return Ok();
     }
 
     [HttpPost]
     [AllowAnonymous]
-    public IActionResult Register([FromBody] RegisterData data)
+    public IActionResult RegisterCustomer([FromBody] RegisterData data)
     {
         return Ok();
+    }
+
+    [HttpPost]
+    [AllowAnonymous]
+    public IActionResult RegisterRestaurant([FromBody] RegisterData data)
+    {
+
+        return Ok(); 
     }
 
     [HttpPost]

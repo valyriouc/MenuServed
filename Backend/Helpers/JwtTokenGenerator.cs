@@ -14,12 +14,12 @@ public class JwtTokenGenerator
         _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Secrets.Instance.Secret));
     }
 
-    public string GenerateToken(string username, string role)
+    public string GenerateToken(string username, string email, string role)
     {
         JwtSecurityToken token = new JwtSecurityToken(
             issuer: Secrets.Instance.Issuer,
             audience: Secrets.Instance.Audience,
-            claims: new[] { new Claim(ClaimTypes.Name, username), new Claim(ClaimTypes.Role, role) },
+            claims: new[] { new Claim(ClaimTypes.Name, username), new Claim(ClaimTypes.Role, role), new Claim(ClaimTypes.Email, email) },
             expires: DateTime.UtcNow.AddMinutes(30),
             signingCredentials: new SigningCredentials(_key, SecurityAlgorithms.HmacSha256)
         );
