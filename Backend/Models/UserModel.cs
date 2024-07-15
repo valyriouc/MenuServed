@@ -44,7 +44,7 @@ public class Location
 
 }
 
-public class Table
+public class Desk
 {
     public int Id { get; set; }
     
@@ -104,8 +104,8 @@ public class Restaurent
     public List<RestaurentCategory> Categories { get; set; } 
         = new List<RestaurentCategory>();
 
-    public List<Table> Tables { get; set; }
-        = new List<Table>();
+    public List<Desk> Tables { get; set; }
+        = new List<Desk>();
 
     public bool WithPickUp { get; set; }
 
