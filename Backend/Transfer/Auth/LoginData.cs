@@ -1,5 +1,35 @@
-﻿namespace Backend.Transfer.Auth;
+﻿using Backend.Helpers;
 
-public record LoginData(string Email, string Password);
+using System.ComponentModel.DataAnnotations;
 
-public record RegisterData(string Email, string UserName, string Password);
+namespace Backend.Transfer.Auth;
+
+public struct LoginData
+{
+    [Required]
+    [EmailAddress]
+    public string Email { get; set; }
+
+    [Required]
+    [RegularExpression(ApiConfig.PasswordPattern)]
+    [MinLength(ApiConfig.MinPasswordLength)]
+    public string Password;
+}
+
+public struct RegisterData
+{
+    [Required]
+    [EmailAddress]
+    public string Email { get; set; }
+
+    [Required]
+    [MinLength(ApiConfig.UsernameMinLength)]
+    [MaxLength(ApiConfig.UsernameMaxLength)]
+    public string UserName { get; set; }
+
+    [Required]
+    [RegularExpression(ApiConfig.PasswordPattern)]
+    [MinLength(ApiConfig.MinPasswordLength)]
+    public string Password { get; set; }
+
+}

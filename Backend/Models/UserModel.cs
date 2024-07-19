@@ -75,6 +75,7 @@ public class MenuCardItem
 
     public int Price { get; set; }
 }
+
 /// <summary>
 /// What has to be in the menu card 
 /// 

@@ -1,4 +1,5 @@
 ﻿using Backend.Helpers;
+using Backend.Services.Auth;
 using Backend.Transfer.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,29 +11,29 @@ namespace Backend.Controllers.Auth;
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
-    private readonly JwtTokenGenerator _tokenGenerator;
+    private readonly LoginService loginService;
 
-    public AuthController(JwtTokenGenerator tokenGenerator)
+    public AuthController(LoginService loginService)
     {
-        _tokenGenerator = tokenGenerator;
+        this.loginService = loginService;
     }
 
-    [HttpPost]
+    [HttpPost("login/")]
     [AllowAnonymous]
-    public IActionResult Login([FromBody] LoginData data)
+    public async Task<IActionResult> Login([FromBody] LoginData data)
     {
-        
-        return Ok();
+        LoginResponse content = await this.loginService.RunAsync(data);
+        return Ok(content);
     }
 
-    [HttpPost]
+    [HttpPost("register/user/")]
     [AllowAnonymous]
     public IActionResult RegisterCustomer([FromBody] RegisterData data)
     {
         return Ok();
     }
 
-    [HttpPost]
+    [HttpPost("register/restaurant/")]
     [AllowAnonymous]
     public IActionResult RegisterRestaurant([FromBody] RegisterData data)
     {
@@ -40,7 +41,7 @@ public class AuthController : ControllerBase
         return Ok(); 
     }
 
-    [HttpPost]
+    [HttpPost("logout/")]
     public IActionResult Logout()
     {
 
