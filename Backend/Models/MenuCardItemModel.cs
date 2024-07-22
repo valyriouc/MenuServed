@@ -8,7 +8,7 @@ public enum ItemKind
 
 public class MenuCardItemModel
 {
-    public int Id { get; set; }
+    public uint Id { get; set; }
 
     public string Title { get; set; } = null!;
 
@@ -17,5 +17,8 @@ public class MenuCardItemModel
     public ItemKind Kind { get; set; }
 
     public int Price { get; set; }
-}
 
+    // TODO: Incredient list 
+
+    public string ImgPath { get; set; } = null!;
+}

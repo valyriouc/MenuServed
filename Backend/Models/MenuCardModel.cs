@@ -5,11 +5,16 @@
 /// </summary>
 public class MenuCardModel
 {
-    public int Id { get; set; }
+    public uint Id { get; set; }
 
     public bool WithPdf { get; set; }
 
     public string? Path { get; set; }
+
+    public bool IsCurrent { get; set; }
+
+    public List<MenuCardItemModel> Items { get; set; } 
+        = new List<MenuCardItemModel>();
 
     public byte[] GetFileContent()
     {
