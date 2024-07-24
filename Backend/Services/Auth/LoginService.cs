@@ -1,5 +1,6 @@
 ﻿
 using Backend.Database;
+using Backend.Helpers;
 using Backend.Information;
 using Backend.Models;
 using Backend.Transfer.Auth;
@@ -21,6 +22,8 @@ public class LoginService : IServiceBase<LoginData, AuthResponse>
         Logger = logger;
     }
 
+    private const string messageForWrongInput = "Email or password are incorrect";
+
     public async Task<AuthResponse> RunAsync(LoginData data)
     {
         // Query database for specified user 
@@ -28,20 +31,20 @@ public class LoginService : IServiceBase<LoginData, AuthResponse>
         
         if (user is null)
         {
-            throw ApiException.NotFound(
-                "User does not exist!");
+            throw ApiException.Unauthorized(
+                messageForWrongInput);
         }
 
-        throw new NotImplementedException();
+        string hash = HashHelper.ComputeSha512(data.Password);
+        if (user.Password != hash)
+        {
+            throw ApiException.Unauthorized(
+                messageForWrongInput);
+        }
 
-        // Check if user exists 
+        JwtTokenGenerator gen = new JwtTokenGenerator("blablabla");
+        string token = gen.GenerateToken(user.UserName, user.Email, user.Role.ToString());
 
-        // Check that password is correct 
-
-        // Authenticate user 
-
-        // Generate token 
-
-        // Return token in response 
+        return new AuthResponse(token);
     }
 }

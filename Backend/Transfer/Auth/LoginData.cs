@@ -31,5 +31,4 @@ public struct RegisterData
     [RegularExpression(ApiConfig.PasswordPattern)]
     [MinLength(ApiConfig.MinPasswordLength)]
     public string Password { get; set; }
-
 }
