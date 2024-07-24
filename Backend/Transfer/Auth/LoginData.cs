@@ -13,7 +13,7 @@ public struct LoginData
     [Required]
     [RegularExpression(ApiConfig.PasswordPattern)]
     [MinLength(ApiConfig.MinPasswordLength)]
-    public string Password;
+    public string Password { get; set; }
 }
 
 public struct RegisterData

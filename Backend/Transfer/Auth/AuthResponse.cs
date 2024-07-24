@@ -1,10 +1,10 @@
 ﻿namespace Backend.Transfer.Auth;
 
-public struct LoginResponse
+public struct AuthResponse
 {
     public string Token { get; }
 
-    public LoginResponse(string token)
+    public AuthResponse(string token)
     {
         Token = token;
     }
