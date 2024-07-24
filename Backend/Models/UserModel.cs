@@ -4,17 +4,22 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Backend.Models;
 
+/// <summary>
+/// Complete quota, ticket system
+/// </summary>
 public enum UserRole
 {
     Customer,
-    Restaurent
+    Restaurent,
+    Developer
 }
 
 /// <summary>
 /// QUESTION: Is this the right method to make money with it???
 /// - Prcing per click 
 /// - Pricing per order 
-/// - Pricing with different features 
+/// - Pricing with different features
+/// - Monetize the components (Menu cards, items, ...)
 /// </summary>
 public enum Pricing
 {
