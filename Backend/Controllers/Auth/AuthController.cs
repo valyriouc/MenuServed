@@ -12,17 +12,21 @@ namespace Backend.Controllers.Auth;
 public class AuthController : ControllerBase
 {
     private readonly LoginService loginService;
+    private readonly RegisterService registerService;
 
-    public AuthController(LoginService loginService)
+    public AuthController(
+        LoginService loginService, 
+        RegisterService registerService)
     {
         this.loginService = loginService;
+        this.registerService = registerService;
     }
 
     [HttpPost("login/")]
     [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] LoginData data)
     {
-        LoginResponse content = await this.loginService.RunAsync(data);
+        AuthResponse content = await this.loginService.RunAsync(data);
         return Ok(content);
     }
 
@@ -30,6 +34,8 @@ public class AuthController : ControllerBase
     [AllowAnonymous]
     public IActionResult RegisterCustomer([FromBody] RegisterData data)
     {
+        registerService.IsCustomerRegistration = true; 
+
         return Ok();
     }
 
@@ -37,6 +43,7 @@ public class AuthController : ControllerBase
     [AllowAnonymous]
     public IActionResult RegisterRestaurant([FromBody] RegisterData data)
     {
+        registerService.IsCustomerRegistration = false;
 
         return Ok(); 
     }
