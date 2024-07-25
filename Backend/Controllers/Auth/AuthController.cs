@@ -33,24 +33,24 @@ public class AuthController : ControllerBase
 
     [HttpPost("register/user/")]
     [AllowAnonymous]
-    public IActionResult RegisterCustomer([FromBody] RegisterData data)
+    public async Task<IActionResult> RegisterCustomer([FromBody] RegisterData data)
     {
-        registerService.IsCustomerRegistration = true; 
-
-        return Ok();
+        registerService.Init(true);
+        ClaimsPrincipal principle = await registerService.RunAsync(data);
+        return SignIn(principle);
     }
 
     [HttpPost("register/restaurant/")]
     [AllowAnonymous]
-    public IActionResult RegisterRestaurant([FromBody] RegisterData data)
+    public async Task<IActionResult> RegisterRestaurant([FromBody] RegisterData data)
     {
-        registerService.IsCustomerRegistration = false;
-
-        return Ok(); 
+        registerService.Init(false);
+        ClaimsPrincipal principle = await registerService.RunAsync(data);
+        return SignIn(principle);
     }
 
     [HttpPost("logout/")]
-    public IActionResult Logout()
+    public async Task<IActionResult> Logout()
     {
 
         return Ok(); 

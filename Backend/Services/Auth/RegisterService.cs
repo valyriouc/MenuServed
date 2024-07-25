@@ -1,20 +1,49 @@
-﻿using Backend.Transfer.Auth;
+﻿using Backend.Database;
+using Backend.Information;
+using Backend.Models;
+using Backend.Transfer.Auth;
+using System.Data.Common;
+using System.Security.Claims;
 
 namespace Backend.Services.Auth;
 
-public class RegisterService : IServiceBase<RegisterData, AuthResponse>
+public class RegisterService : IServiceBase<RegisterData, ClaimsPrincipal>
 {
     public ILogger Logger { get; set; }
 
-    public bool IsCustomerRegistration { get; set; } = true;
+    private bool IsCustomerRegistration { get; set; }
 
-    public RegisterService(ILogger logger)
+    private AppDbContext DbContext { get; } 
+
+    public RegisterService(AppDbContext dbContext, ILogger logger)
     {
         Logger = logger;
+        DbContext = dbContext;
+    }
+    
+    public void Init(bool isCustomerRegistration)
+    {
+        IsCustomerRegistration = isCustomerRegistration;
     }
 
-    public Task<AuthResponse> RunAsync(RegisterData data)
+    public async Task<ClaimsPrincipal> RunAsync(RegisterData data)
     {
-        throw new NotImplementedException();
+        UserModel? user = DbContext.Users.FirstOrDefault(
+            x => x.Email == data.Email);
+
+        if (user is not null)
+        {
+            throw ApiException.BadRequest(
+                "There already exists an account with this email!");
+        }
+
+        user = IsCustomerRegistration ?
+            UserModel.CreateCustomer(data) :
+            UserModel.CreateRestaurent(data);
+
+        await DbContext.Users.AddAsync(user);
+        await DbContext.SaveChangesAsync();
+
+        return user.CreatePrinciple();
     }
 }

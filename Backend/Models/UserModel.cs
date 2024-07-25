@@ -1,4 +1,5 @@
 ﻿using Backend.Helpers;
+using Backend.Transfer.Auth;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
@@ -98,5 +99,35 @@ public class UserModel
         );
 
         return principle;
+    }
+
+    public static UserModel CreateCustomer(RegisterData data)
+    {
+        UserModel model = new UserModel()
+        {
+            Email = data.Email,
+            FreeTrialStarted = DateTime.UtcNow.Date,
+            Role = UserRole.Customer,
+            Password = HashHelper.ComputeSha512(data.Password),
+            UserName = data.UserName,
+            PricingPlan = Pricing.FreeTrial
+        };
+
+        return model;
+    }
+
+    public static UserModel CreateRestaurent(RegisterData data)
+    {
+        UserModel model = new UserModel()
+        {
+            Email = data.Email,
+            FreeTrialStarted = DateTime.UtcNow.Date,
+            Role = UserRole.Restaurent,
+            Password = HashHelper.ComputeSha512(data.Password),
+            UserName = data.UserName,
+            PricingPlan = Pricing.FreeTrial
+        };
+
+        return model;
     }
 }
