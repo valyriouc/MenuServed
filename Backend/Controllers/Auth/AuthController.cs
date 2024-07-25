@@ -7,8 +7,10 @@ using System.Security.Claims;
 
 namespace Backend.Controllers.Auth;
 
+// https://docs.duendesoftware.com/identityserver/v7/overview/
+
 [ApiController]
-[Authorize]
+[Authorize(Roles = "Customer, Restaurent, Developer, Admin")]
 [Route("api/[controller]")]
 public class AuthController : ControllerBase
 {
@@ -23,16 +25,16 @@ public class AuthController : ControllerBase
         this.registerService = registerService;
     }
 
-    [HttpPost("login/")]
     [AllowAnonymous]
+    [HttpPost("login/")]
     public async Task<IActionResult> Login([FromBody] LoginData data)
     {
         ClaimsPrincipal content = await this.loginService.RunAsync(data);
         return SignIn(content);
     }
 
-    [HttpPost("register/user/")]
     [AllowAnonymous]
+    [HttpPost("register/user/")]
     public async Task<IActionResult> RegisterCustomer([FromBody] RegisterData data)
     {
         registerService.Init(true);
@@ -40,8 +42,8 @@ public class AuthController : ControllerBase
         return SignIn(principle);
     }
 
-    [HttpPost("register/restaurant/")]
     [AllowAnonymous]
+    [HttpPost("register/restaurant/")]
     public async Task<IActionResult> RegisterRestaurant([FromBody] RegisterData data)
     {
         registerService.Init(false);
@@ -52,7 +54,6 @@ public class AuthController : ControllerBase
     [HttpPost("logout/")]
     public async Task<IActionResult> Logout()
     {
-
-        return Ok(); 
+        return SignOut();
     }
 }
