@@ -1,6 +1,8 @@
 ﻿using Backend.Helpers;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data;
+using System.Security.Claims;
 
 namespace Backend.Models;
 
@@ -11,7 +13,8 @@ public enum UserRole
 {
     Customer,
     Restaurent,
-    Developer
+    Developer,
+    Admin
 }
 
 /// <summary>
@@ -42,7 +45,6 @@ public class Filter
 public class PaymentMethod
 {
     public uint Id { get; set; }
-
 
 }
 
@@ -79,4 +81,22 @@ public class UserModel
     public Pricing PricingPlan { get; set; }
 
     public DateTime? FreeTrialStarted { get; set; } 
+
+    public ClaimsPrincipal CreatePrinciple()
+    {
+        ClaimsPrincipal principle = new ClaimsPrincipal();
+
+        principle.AddIdentity(
+            new ClaimsIdentity(
+                new[] 
+                { 
+                    new Claim(ClaimTypes.Name, UserName), 
+                    new Claim(ClaimTypes.Role, Role.ToString()), 
+                    new Claim(ClaimTypes.Email, Email) 
+                }
+            )
+        );
+
+        return principle;
+    }
 }

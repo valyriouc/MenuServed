@@ -3,6 +3,7 @@ using Backend.Services.Auth;
 using Backend.Transfer.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Backend.Controllers.Auth;
 
@@ -26,8 +27,8 @@ public class AuthController : ControllerBase
     [AllowAnonymous]
     public async Task<IActionResult> Login([FromBody] LoginData data)
     {
-        AuthResponse content = await this.loginService.RunAsync(data);
-        return Ok(content);
+        ClaimsPrincipal content = await this.loginService.RunAsync(data);
+        return SignIn(content);
     }
 
     [HttpPost("register/user/")]

@@ -5,10 +5,11 @@ using Backend.Information;
 using Backend.Models;
 using Backend.Transfer.Auth;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace Backend.Services.Auth;
 
-public class LoginService : IServiceBase<LoginData, AuthResponse>
+public class LoginService : IServiceBase<LoginData, ClaimsPrincipal>
 {
     private AppDbContext DbContext { get; }
 
@@ -24,9 +25,8 @@ public class LoginService : IServiceBase<LoginData, AuthResponse>
 
     private const string messageForWrongInput = "Email or password are incorrect";
 
-    public async Task<AuthResponse> RunAsync(LoginData data)
+    public async Task<ClaimsPrincipal> RunAsync(LoginData data)
     {
-        // Query database for specified user 
         UserModel? user = await DbContext.Users.FirstOrDefaultAsync(employee => employee.Email == data.Email);
         
         if (user is null)
@@ -42,9 +42,6 @@ public class LoginService : IServiceBase<LoginData, AuthResponse>
                 messageForWrongInput);
         }
 
-        JwtTokenGenerator gen = new JwtTokenGenerator("blablabla");
-        string token = gen.GenerateToken(user.UserName, user.Email, user.Role.ToString());
-
-        return new AuthResponse(token);
+        return user.CreatePrinciple();
     }
 }
